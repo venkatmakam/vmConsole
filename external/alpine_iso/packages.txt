@@ -28,6 +28,9 @@ brotli-libs
 busybox
 busybox-binsh
 busybox-doc
+busybox-extras
+busybox-extras-openrc
+busybox-ifupdown
 busybox-mdev-openrc
 busybox-openrc
 busybox-suid
@@ -44,6 +47,7 @@ cryptsetup-openrc
 curl
 curl-doc
 dbus-libs
+device-mapper
 device-mapper-event-libs
 device-mapper-libs
 dhcpcd
@@ -71,11 +75,13 @@ haserl-lua5.2
 haveged
 haveged-doc
 haveged-openrc
+idn2-utils
 ifupdown-ng
 ifupdown-ng-doc
 ifupdown-ng-ppp
 ifupdown-ng-wifi
 iw
+iw-doc
 json-c
 json-c-doc
 kbd-bkeymaps
@@ -110,6 +116,7 @@ libidn2-doc
 libintl
 libmount
 libnl3
+libnl3-cli
 libnl3-doc
 libpcap
 libpcap-doc
@@ -120,6 +127,7 @@ libssl3
 libstdc++
 libtasn1
 libtasn1-doc
+libtasn1-progs
 libunistring
 libunistring-doc
 libusb
@@ -145,6 +153,7 @@ lynx-doc
 mandoc
 mandoc-apropos
 mandoc-doc
+mandoc-soelim
 mdadm
 mdadm-doc
 mdev-conf
@@ -154,6 +163,7 @@ mini_httpd-openrc
 mkinitfs
 mkinitfs-doc
 mpdecimal
+mpdecimal-doc
 mtools
 mtools-doc
 musl
@@ -164,6 +174,7 @@ nano-syntax
 ncurses-libs
 ncurses-terminfo-base
 nettle
+nettle-utils
 network-extras
 nghttp2-libs
 openntpd
@@ -177,6 +188,7 @@ openssh-client-common
 openssh-client-default
 openssh-doc
 openssh-keygen
+openssh-keysign
 openssh-server
 openssh-server-common
 openssh-sftp-server
@@ -185,6 +197,8 @@ openssl-doc
 p11-kit
 p11-kit-doc
 pcre2
+pcre2-doc
+pcre2-tools
 pcsc-lite-libs
 popt
 popt-doc
@@ -223,10 +237,13 @@ tmux
 tmux-doc
 tzdata
 tzdata-doc
+tzdata-utils
 usb-modeswitch
 usb-modeswitch-doc
 vim
+vimdiff
 vim-doc
+vim-tutor
 vlan
 wget
 wget-doc
