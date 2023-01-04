@@ -32,7 +32,7 @@ mkdir -p "$tmp"/etc
 ##############################################################################
 
 makefile root:root 0644 "$tmp"/etc/fstab <<EOF
-/dev/cdrom      /media/cdrom    iso9660 ro                        0 0
+/dev/sr0        /media/sr0      iso9660 ro                        0 0
 host_storage    /media/host     9p      trans=virtio,msize=262144 0 0
 EOF
 
