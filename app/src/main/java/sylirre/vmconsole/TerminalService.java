@@ -223,12 +223,12 @@ public class TerminalService extends Service implements SessionChangedCallback {
             contentText.append(" Wake lock held.");
         }
 
-        if (mTerminalSession != null) {
+        /*if (mTerminalSession != null) {
             String terminalTitle = mTerminalSession.getTitle();
             if (terminalTitle != null && !terminalTitle.isEmpty()) {
                 contentText.append("\n" + mTerminalSession.getTitle());
             }
-        }
+        }*/
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         builder.setContentIntent(pendingIntent);
