@@ -311,13 +311,25 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
 
     /**
      * Get a random free high tcp port which later will be used in startQemu().
-     * @return Integer value in range 30000 - 50000 which is available tcp port.
-     *         On failure -1 will be returned.
+     * @param desiredPort Integer value that specifies desired port.
+     * @return Integer value specified by desiredPort if the given TCP port is
+     *         available, otherwise value in range 30000 - 50000. On failure -1
+     *         will be returned.
      */
-    private int getFreePort() {
+    private int getFreePort(int desiredPort) {
         Random rnd = new Random();
         int port = -1;
 
+        // Check whether desired port is available.
+        try (ServerSocket sock = new ServerSocket(desiredPort)) {
+            sock.setReuseAddress(true);
+            port = sock.getLocalPort();
+        } catch (Exception e) {
+            Log.w(Config.APP_LOG_TAG, "cannot acquire tcp port", e);
+        }
+        if (port != -1) return port;
+
+        // Otherwise try to get a random port.
         for (int i=0; i<32; i++) {
             try (ServerSocket sock = new ServerSocket(rnd.nextInt(20001) + 30000)) {
                 sock.setReuseAddress(true);
@@ -457,7 +469,7 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
 
         // Get a free high port for SSH forwarding.
         // This port will be exposed to external network. User should take care about security.
-        int sshPort = getFreePort();
+        int sshPort = getFreePort(10022);
         if (sshPort != -1) {
             mTermService.SSH_PORT = sshPort;
             vmnicArgs = vmnicArgs + ",hostfwd=tcp::" + sshPort + "-:22";
@@ -469,7 +481,7 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
         // Case where webPort will be equal to sshPort is unlikely, but
         // try eliminate this possibility as well.
         for (int attempt=0; attempt<3; attempt++) {
-            webPort = getFreePort();
+            webPort = getFreePort(10080);
             if (webPort != sshPort && webPort != -1) {
                 mTermService.WEB_PORT = webPort;
                 vmnicArgs = vmnicArgs + ",hostfwd=tcp::" + webPort + "-:80";
