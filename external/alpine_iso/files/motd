@@ -65,12 +65,22 @@ trigger certain actions of the application:[0m
  [1;36m| [0;32mCtrl Alt V      [1;36m| [0;32mPaste clipboard               [1;36m|[0m
  [1;36m|_________________|_______________________________|[0m
 
-[1;36mPort forwarding[0;36m: VM is configured to forward ports of SSH (22)
-and Web (80) services. Both ports are exposed as random ones
-on the host and are world-accessible within your local network.
-You can view the host ports through the context menu. They are
-shown on related tabs "Open SSH" and "Open Web" which used to
-launch clients for respective services.[0m
+[1;36mPort forwarding[0;36m: VM is configured to forward ports of SSH (22),
+HTTP (80) and HTTPS (443) services. These guest ports are
+forwarded to 16022, 16080 and 16443 respectively when possible.
+On allocation failure the VM will use random port numbers as
+fallback.[0m
+
+[0;36mThe forwarded services will be accessible within your LAN. Be
+careful when running services with no authentication.[0m
+
+[0;36mYou can view the host ports through the context menu. They are
+shown on tabs "Open SSH", "Open HTTP" and "Open HTTPS". Click
+on the tab will result in attempt of launching the client for
+selected service, for example ConnectBot for SSH or Chrome for
+HTTP.[0m
+
+[0;36m----------------------------------------------------------------[0m
 
 [1;36mShared storage volume[0;36m:
 
