@@ -549,7 +549,7 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
             }
 
             if (mTermService.HTTPS_PORT != -1) {
-                menu.add(Menu.NONE, CONTEXTMENU_OPEN_HTTPS, Menu.NONE, getResources().getString(R.string.menu_open_http, "0.0.0.0:" + mTermService.HTTPS_PORT));
+                menu.add(Menu.NONE, CONTEXTMENU_OPEN_HTTPS, Menu.NONE, getResources().getString(R.string.menu_open_https, "0.0.0.0:" + mTermService.HTTPS_PORT));
             }
         }
         menu.add(Menu.NONE, CONTEXTMENU_OPEN_FM, Menu.NONE, R.string.menu_open_fm);
