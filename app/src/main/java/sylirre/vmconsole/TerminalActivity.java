@@ -509,8 +509,10 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
             Log.e(Config.APP_LOG_TAG, "failed to create user_volume directory", e);
         }
 
-        // We need only monitor & serial consoles.
+        // Provide dummy graphics but don't output anything.
         processArgs.add("-nographic");
+        processArgs.addAll(Arrays.asList("-device", "VGA,id=vga-pci0,vgamem_mb=16"));
+        //processArgs.addAll(Arrays.asList("-vnc", "127.0.0.1:1" + ",password=off"));
 
         // Disable parallel port.
         processArgs.addAll(Arrays.asList("-parallel", "none"));
