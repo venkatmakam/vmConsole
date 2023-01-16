@@ -20,7 +20,8 @@
 
     <!-- Context menu: more -->
     <string name="menu_open_ssh">Open SSH (%s)</string>
-    <string name="menu_open_web">Open Web (%s)</string>
+    <string name="menu_open_http">Open HTTP (%s)</string>
+    <string name="menu_open_https">Open HTTPS (%s)</string>
     <string name="menu_open_fm">Open File Manager</string>
     <string name="menu_autofill_pw">Autofill password</string>
     <string name="menu_select_urls">Select URLs</string>
@@ -36,11 +37,9 @@
     <string name="dialog_set_ssh_user_title">Connect as user:</string>
     <string name="dialog_set_ssh_user_invalid_name">Cannot use the given SSH user name.</string>
     <string name="toast_open_ssh_intent_failure">Unable to launch SSH client Android application.</string>
-    <string name="toast_open_ssh_unavailable">Cannot use this function because port forwarding failed.</string>
 
     <!-- Context menu: Open Web -->
     <string name="toast_open_web_intent_failure">Unable to launch web browser Android application.</string>
-    <string name="toast_open_web_unavailable">Cannot use this function because port forwarding failed.</string>
 
     <!-- Select URL dialog -->
     <string name="toast_no_urls_found">No URLs detected.</string>
@@ -64,4 +63,5 @@
     <string name="toast_bell_char_processed">Bell characters will be processed.</string>
     <string name="toast_terminal_scrolling_disabled">Terminal auto scrolling disabled.</string>
     <string name="toast_terminal_scrolling_enabled">Terminal auto scrolling enabled.</string>
+    <string name="toast_port_fwd_failed">Cannot use this function because port forwarding failed.</string>
 </resources>

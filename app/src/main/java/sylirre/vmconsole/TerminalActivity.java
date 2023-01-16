@@ -65,14 +65,15 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
 
     private static final int CONTEXTMENU_PASTE_ID = 1;
     private static final int CONTEXTMENU_OPEN_SSH = 2;
-    private static final int CONTEXTMENU_OPEN_WEB = 3;
-    private static final int CONTEXTMENU_OPEN_FM = 4;
-    private static final int CONTEXTMENU_AUTOFILL_PW = 5;
-    private static final int CONTEXTMENU_SELECT_URLS = 6;
-    private static final int CONTEXTMENU_RESET_TERMINAL_ID = 7;
-    private static final int CONTEXTMEMU_SHUTDOWN = 8;
-    private static final int CONTEXTMENU_TOGGLE_IGNORE_BELL = 9;
-    private static final int CONTEXTMENU_TOGGLE_AUTO_SCROLL = 10;
+    private static final int CONTEXTMENU_OPEN_HTTP = 3;
+    private static final int CONTEXTMENU_OPEN_HTTPS = 4;
+    private static final int CONTEXTMENU_OPEN_FM = 5;
+    private static final int CONTEXTMENU_AUTOFILL_PW = 6;
+    private static final int CONTEXTMENU_SELECT_URLS = 7;
+    private static final int CONTEXTMENU_RESET_TERMINAL_ID = 8;
+    private static final int CONTEXTMEMU_SHUTDOWN = 9;
+    private static final int CONTEXTMENU_TOGGLE_IGNORE_BELL = 10;
+    private static final int CONTEXTMENU_TOGGLE_AUTO_SCROLL = 11;
 
     private static final int PERMISSION_REQUEST_CODE_NOTIFICATIONS = 1000;
 
@@ -311,12 +312,18 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
 
     /**
      * Get a random free high tcp port which later will be used in startQemu().
-     * @param desiredPort Integer value that specifies desired port.
+     *
+     * @param desiredPort  Integer value that specifies desired port.
+     *
+     * @param minPort      Minimal port that can be selected randomly.
+     *
+     * @param maxPort      Maximal port that can be selected randomly.
+     *
      * @return Integer value specified by desiredPort if the given TCP port is
-     *         available, otherwise value in range 30000 - 50000. On failure -1
-     *         will be returned.
+     *         available, otherwise value in range (minPort, maxPort). On
+     *         failure -1 will be returned instead.
      */
-    private int getFreePort(int desiredPort) {
+    private int getFreePort(int desiredPort, int minPort, int maxPort) {
         Random rnd = new Random();
         int port = -1;
 
@@ -331,7 +338,7 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
 
         // Otherwise try to get a random port.
         for (int i=0; i<32; i++) {
-            try (ServerSocket sock = new ServerSocket(rnd.nextInt(20001) + 30000)) {
+            try (ServerSocket sock = new ServerSocket(minPort + rnd.nextInt(maxPort - minPort + 1))) {
                 sock.setReuseAddress(true);
                 port = sock.getLocalPort();
                 break;
@@ -469,7 +476,7 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
 
         // Get a free high port for SSH forwarding.
         // This port will be exposed to external network. User should take care about security.
-        int sshPort = getFreePort(16022);
+        int sshPort = getFreePort(16022, 20000, 24999);
         if (sshPort != -1) {
             mTermService.SSH_PORT = sshPort;
             vmnicArgs = vmnicArgs + ",hostfwd=tcp::" + sshPort + "-:22";
@@ -477,16 +484,15 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
 
         // Get a free high port for Web forwarding.
         // This port will be exposed to external network. User should take care about security.
-        int webPort;
-        // Case where webPort will be equal to sshPort is unlikely, but
-        // try eliminate this possibility as well.
-        for (int attempt=0; attempt<3; attempt++) {
-            webPort = getFreePort(16080);
-            if (webPort != sshPort && webPort != -1) {
-                mTermService.WEB_PORT = webPort;
-                vmnicArgs = vmnicArgs + ",hostfwd=tcp::" + webPort + "-:80";
-                break;
-            }
+        int httpPort = getFreePort(16080, 25000, 29999);
+        if (httpPort != -1) {
+            mTermService.HTTP_PORT = httpPort;
+            vmnicArgs = vmnicArgs + ",hostfwd=tcp::" + httpPort + "-:80";
+        }
+        int httpsPort = getFreePort(16443, 30000, 34999);
+        if (httpsPort != -1) {
+            mTermService.HTTPS_PORT = httpsPort;
+            vmnicArgs = vmnicArgs + ",hostfwd=tcp::" + httpsPort + "-:443";
         }
 
         processArgs.addAll(Arrays.asList("-netdev", vmnicArgs));
@@ -533,11 +539,15 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         if (mTermService != null) {
             if (mTermService.SSH_PORT != -1) {
-                menu.add(Menu.NONE, CONTEXTMENU_OPEN_SSH, Menu.NONE, getResources().getString(R.string.menu_open_ssh, "localhost:" + mTermService.SSH_PORT));
+                menu.add(Menu.NONE, CONTEXTMENU_OPEN_SSH, Menu.NONE, getResources().getString(R.string.menu_open_ssh, "0.0.0.0:" + mTermService.SSH_PORT));
             }
 
-            if (mTermService.WEB_PORT != -1) {
-                menu.add(Menu.NONE, CONTEXTMENU_OPEN_WEB, Menu.NONE, getResources().getString(R.string.menu_open_web, "localhost:" + mTermService.WEB_PORT));
+            if (mTermService.HTTP_PORT != -1) {
+                menu.add(Menu.NONE, CONTEXTMENU_OPEN_HTTP, Menu.NONE, getResources().getString(R.string.menu_open_http, "0.0.0.0:" + mTermService.HTTP_PORT));
+            }
+
+            if (mTermService.HTTPS_PORT != -1) {
+                menu.add(Menu.NONE, CONTEXTMENU_OPEN_HTTPS, Menu.NONE, getResources().getString(R.string.menu_open_http, "0.0.0.0:" + mTermService.HTTPS_PORT));
             }
         }
         menu.add(Menu.NONE, CONTEXTMENU_OPEN_FM, Menu.NONE, R.string.menu_open_fm);
@@ -598,18 +608,18 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
                         dialog.dismiss();
                     }).setNegativeButton(R.string.cancel_label, ((dialog, which) -> dialog.dismiss())).show();
                 } else {
-                    Toast.makeText(this, R.string.toast_open_ssh_unavailable, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.toast_port_fwd_failed, Toast.LENGTH_LONG).show();
                 }
                 return true;
-            case CONTEXTMENU_OPEN_WEB:
-                int webPort = -1;
+            case CONTEXTMENU_OPEN_HTTP:
+                int httpPort = -1;
 
                 if (mTermService != null) {
-                    webPort = mTermService.WEB_PORT;
+                    httpPort = mTermService.HTTP_PORT;
                 }
 
-                if (webPort != -1) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://127.0.0.1:" + webPort));
+                if (httpPort != -1) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://127.0.0.1:" + httpPort));
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     try {
                         startActivity(intent);
@@ -618,7 +628,27 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
                         Log.e(Config.APP_LOG_TAG, "failed to start intent", e);
                     }
                 } else {
-                    Toast.makeText(this, R.string.toast_open_web_unavailable, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.toast_port_fwd_failed, Toast.LENGTH_LONG).show();
+                }
+                return true;
+            case CONTEXTMENU_OPEN_HTTPS:
+                int httpsPort = -1;
+
+                if (mTermService != null) {
+                    httpsPort = mTermService.HTTPS_PORT;
+                }
+
+                if (httpsPort != -1) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://127.0.0.1:" + httpsPort));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    try {
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        Toast.makeText(this, R.string.toast_open_web_intent_failure, Toast.LENGTH_LONG).show();
+                        Log.e(Config.APP_LOG_TAG, "failed to start intent", e);
+                    }
+                } else {
+                    Toast.makeText(this, R.string.toast_port_fwd_failed, Toast.LENGTH_LONG).show();
                 }
                 return true;
             case CONTEXTMENU_OPEN_FM:
