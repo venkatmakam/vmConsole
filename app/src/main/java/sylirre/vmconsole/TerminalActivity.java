@@ -469,7 +469,7 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
 
         // Get a free high port for SSH forwarding.
         // This port will be exposed to external network. User should take care about security.
-        int sshPort = getFreePort(10022);
+        int sshPort = getFreePort(16022);
         if (sshPort != -1) {
             mTermService.SSH_PORT = sshPort;
             vmnicArgs = vmnicArgs + ",hostfwd=tcp::" + sshPort + "-:22";
@@ -481,7 +481,7 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
         // Case where webPort will be equal to sshPort is unlikely, but
         // try eliminate this possibility as well.
         for (int attempt=0; attempt<3; attempt++) {
-            webPort = getFreePort(10080);
+            webPort = getFreePort(16080);
             if (webPort != sshPort && webPort != -1) {
                 mTermService.WEB_PORT = webPort;
                 vmnicArgs = vmnicArgs + ",hostfwd=tcp::" + webPort + "-:80";
