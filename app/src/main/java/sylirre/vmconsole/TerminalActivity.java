@@ -32,6 +32,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
@@ -497,15 +498,55 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
         processArgs.addAll(Arrays.asList("-netdev", vmnicArgs));
         processArgs.addAll(Arrays.asList("-device", "virtio-net-pci,netdev=vmnic0,id=virtio-net-pci0"));
 
-        File userData = new File(getFilesDir(), "user_volume");
-        try {
-            if (!userData.exists()) userData.mkdirs();
-            processArgs.addAll(Arrays.asList("-fsdev",
-                    "local,security_model=none,id=fsdev0,multidevs=remap,path=" + userData.getAbsolutePath()));
-            processArgs.addAll(Arrays.asList("-device",
+        boolean hasStorage = false;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // On Android 11 we need to deal with MANAGE_EXTERNAL_STORAGE permission to overcome
+                // the scoped storage restrictions.
+                // Ref: https://developer.android.com/about/versions/11/privacy/storage#all-files-access
+                // Ref: https://developer.android.com/training/data-storage/manage-all-files
+                if (Environment.isExternalStorageManager()) {
+                    hasStorage = true;
+                }
+            } else {
+                // Otherwise use a regular permission WRITE_EXTERNAL_STORAGE.
+                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                    hasStorage = true;
+                }
+            }
+        }
+
+        if (hasStorage) {
+            String sharedStoragePath = null;
+
+            if (new File("/storage/self/primary").listFiles() != null) {
+                sharedStoragePath = "/storage/self/primary";
+                Log.i(Config.APP_LOG_TAG, "using /storage/self/primary as shared storage path");
+            } else {
+                Log.w(Config.APP_LOG_TAG, "unable to read /storage/self/primary, using fallback method of determining shared storage path");
+
+                // Determine storage directory under /storage/emulated.
+                UserManager userManager = (UserManager) context.getSystemService(Context.USER_SERVICE);
+                if (userManager != null) {
+                    long auid = userManager.getSerialNumberForUser(UserHandle.getUserHandleForUid(getUidForPackage(appContext)));
+                    if (new File("/storage/emulated/" + auid).listFiles() != null) {
+                        sharedStoragePath = "/storage/emulated/" + auid;
+                        Log.i(Config.APP_LOG_TAG, "using /storage/emulated/" + auid + " as shared storage path");
+                    } else {
+                        Log.e(Config.APP_LOG_TAG, "unable to read /storage/emulated/" + auid + ", shared storage will be unavailable");
+                    }
+                } else {
+                    Log.e(Config.APP_LOG_TAG, "userManager is null, unable to set up access to shared storage");
+                }
+            }
+
+            if (sharedStoragePath != null) {
+                processArgs.addAll(Arrays.asList("-fsdev",
+                    "local,security_model=none,id=fsdev0,multidevs=remap,path=" + sharedStoragePath));
+                processArgs.addAll(Arrays.asList("-device",
                     "virtio-9p-pci,fsdev=fsdev0,mount_tag=host_storage,id=virtio-9p-pci0"));
-        } catch (Exception e) {
-            Log.e(Config.APP_LOG_TAG, "failed to create user_volume directory", e);
+            }
         }
 
         // Provide dummy graphics but don't output anything.
