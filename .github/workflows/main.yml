@@ -8,10 +8,10 @@ on:
       - main
       - development
     paths:
-      - app/*
-      - external/alpine_iso/*
-      - external/libvmc/*
-      - gradle/*
+      - app/**
+      - external/alpine_iso/**
+      - external/libvmc/**
+      - gradle/**
       - gradle*
       - ./*.gradle
     tags:
