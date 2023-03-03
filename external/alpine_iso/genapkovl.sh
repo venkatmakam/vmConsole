@@ -489,9 +489,9 @@ mkdir -p "$tmp"/usr/local/bin "$tmp"/usr/local/share
 cp "${MKIMAGE_SCRIPT_DIR}"/files/local-bin/* "$tmp"/usr/local/bin/
 cp -r "${MKIMAGE_SCRIPT_DIR}"/files/local-share/* "$tmp"/usr/local/share/
 chown -R root:root "$tmp"/usr/local
-find "$tmp"/usr/local -type d -exec chmod 755 \;
-find "$tmp"/usr/local/bin -type f -exec chmod 755 \;
-find "$tmp"/usr/local/share -type f -exec chmod 644 \;
+find "$tmp"/usr/local -type d -exec chmod 755 "{}" \;
+find "$tmp"/usr/local/bin -type f -exec chmod 755 "{}" \;
+find "$tmp"/usr/local/share -type f -exec chmod 644 "{}" \;
 
 ##############################################################################
 ##
