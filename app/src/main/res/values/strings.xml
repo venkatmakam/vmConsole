@@ -30,15 +30,12 @@
     <string name="menu_toggle_ignore_bell">Ignore bell character</string>
     <string name="menu_toggle_scrolling">Disable auto scrolling</string>
 
-    <!-- Context menu: Open File Manager -->
-    <string name="toast_open_fm_intent_failure">Failed to launch a file manager.</string>
-
     <!-- Context menu: Open SSH -->
     <string name="dialog_set_ssh_user_title">Connect as user:</string>
     <string name="dialog_set_ssh_user_invalid_name">Cannot use the given SSH user name.</string>
     <string name="toast_open_ssh_intent_failure">Unable to launch SSH client Android application.</string>
 
-    <!-- Context menu: Open Web -->
+    <!-- Context menu: Open HTTP (HTTPS) -->
     <string name="toast_open_web_intent_failure">Unable to launch web browser Android application.</string>
 
     <!-- Select URL dialog -->

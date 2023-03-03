@@ -67,13 +67,12 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
     private static final int CONTEXTMENU_OPEN_SSH = 2;
     private static final int CONTEXTMENU_OPEN_HTTP = 3;
     private static final int CONTEXTMENU_OPEN_HTTPS = 4;
-    private static final int CONTEXTMENU_OPEN_FM = 5;
-    private static final int CONTEXTMENU_AUTOFILL_PW = 6;
-    private static final int CONTEXTMENU_SELECT_URLS = 7;
-    private static final int CONTEXTMENU_RESET_TERMINAL_ID = 8;
-    private static final int CONTEXTMEMU_SHUTDOWN = 9;
-    private static final int CONTEXTMENU_TOGGLE_IGNORE_BELL = 10;
-    private static final int CONTEXTMENU_TOGGLE_AUTO_SCROLL = 11;
+    private static final int CONTEXTMENU_AUTOFILL_PW = 5;
+    private static final int CONTEXTMENU_SELECT_URLS = 6;
+    private static final int CONTEXTMENU_RESET_TERMINAL_ID = 7;
+    private static final int CONTEXTMEMU_SHUTDOWN = 8;
+    private static final int CONTEXTMENU_TOGGLE_IGNORE_BELL = 9;
+    private static final int CONTEXTMENU_TOGGLE_AUTO_SCROLL = 10;
 
     private static final int PERMISSION_REQUEST_CODE_NOTIFICATIONS = 1000;
 
@@ -552,7 +551,6 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
                 menu.add(Menu.NONE, CONTEXTMENU_OPEN_HTTPS, Menu.NONE, getResources().getString(R.string.menu_open_https, "0.0.0.0:" + mTermService.HTTPS_PORT));
             }
         }
-        menu.add(Menu.NONE, CONTEXTMENU_OPEN_FM, Menu.NONE, R.string.menu_open_fm);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             AutofillManager autofillManager = getSystemService(AutofillManager.class);
             if (autofillManager != null && autofillManager.isEnabled()) {
@@ -651,45 +649,6 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
                     }
                 } else {
                     Toast.makeText(this, R.string.toast_port_fwd_failed, Toast.LENGTH_LONG).show();
-                }
-                return true;
-            case CONTEXTMENU_OPEN_FM:
-                // Begin with a standard AOSP file manager (Documents UI).
-                try {
-                    Intent intent = new Intent(Intent.ACTION_MAIN);
-                    intent.setComponent(new ComponentName("com.android.documentsui", "com.android.documentsui.files.FilesActivity"));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    return true;
-                } catch (Exception e) {
-                    Log.e(Config.APP_LOG_TAG, "failed to start intent", e);
-                }
-
-                // Try a Google variant of Documents UI. This is what available on Pixel
-                // devices in addition to Google Files application.
-                // Begin with a standard AOSP file manager (Documents UI).
-                try {
-                    Intent intent = new Intent(Intent.ACTION_MAIN);
-                    intent.setComponent(new ComponentName("com.google.android.documentsui", "com.android.documentsui.files.FilesActivity"));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    return true;
-                } catch (Exception e) {
-                    Log.e(Config.APP_LOG_TAG, "failed to start intent", e);
-                }
-
-                // Open standard file manager.
-                // It can be either DocumentsUI, Google Files (Pixel devices) or something else.
-                // Use this as last resort, since file manager may not be fully SAF-capable. For
-                // example, Google Files opens the main activity instead of documents provider of
-                // the application.
-                try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://com.android.externalstorage.documents/root/primary"));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Toast.makeText(this, R.string.toast_open_fm_intent_failure, Toast.LENGTH_LONG).show();
-                    Log.e(Config.APP_LOG_TAG, "failed to start intent", e);
                 }
                 return true;
             case CONTEXTMENU_AUTOFILL_PW:
