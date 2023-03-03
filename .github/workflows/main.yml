@@ -183,7 +183,7 @@ jobs:
             mv ./app/build/outputs/bundle/release/* ./artifacts/bundle/
           else
             if [ -n "$KEY_PASSPHRASE" ]; then
-              sed -E 's|//(signingConfig signingConfigs.release)|\1|g' ./app/build.gradle
+              sed -i -E 's|//(signingConfig signingConfigs.release)|\1|g' ./app/build.gradle
             fi
             ./gradlew assembleDebug
             mkdir -p ./artifacts/apk
