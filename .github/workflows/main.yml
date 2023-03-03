@@ -182,7 +182,9 @@ jobs:
             mkdir -p ./artifacts/bundle
             mv ./app/build/outputs/bundle/release/* ./artifacts/bundle/
           else
-            unset KEY_PASSPHRASE
+            if [ -n "$KEY_PASSPHRASE" ]; then
+              sed -E 's|//(signingConfig signingConfigs.release)|\1|g' ./app/build.gradle
+            fi
             ./gradlew assembleDebug
             mkdir -p ./artifacts/apk
             mv ./app/build/outputs/apk/debug/* ./artifacts/apk/
