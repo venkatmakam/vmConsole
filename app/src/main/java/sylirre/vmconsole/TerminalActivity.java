@@ -34,6 +34,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
+import android.os.UserHandle;
+import android.os.UserManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
@@ -527,9 +529,9 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
                 Log.w(Config.APP_LOG_TAG, "unable to read /storage/self/primary, using fallback method of determining shared storage path");
 
                 // Determine storage directory under /storage/emulated.
-                UserManager userManager = (UserManager) context.getSystemService(Context.USER_SERVICE);
+                UserManager userManager = (UserManager) appContext.getSystemService(Context.USER_SERVICE);
                 if (userManager != null) {
-                    long auid = userManager.getSerialNumberForUser(UserHandle.getUserHandleForUid(getUidForPackage(appContext)));
+                    long auid = userManager.getSerialNumberForUser(UserHandle.getUserHandleForUid(appContext.getApplicationInfo().uid));
                     if (new File("/storage/emulated/" + auid).listFiles() != null) {
                         sharedStoragePath = "/storage/emulated/" + auid;
                         Log.i(Config.APP_LOG_TAG, "using /storage/emulated/" + auid + " as shared storage path");
