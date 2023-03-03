@@ -86,8 +86,9 @@ files, documents and downloads.[0m
 
 [0;36mIn order to access the shared storage, the vmConsole should
 be granted storage access permission. This can be done in
-Android OS settings menu, After granting the permission
-please restart the application.[0m
+Android OS settings menu. You may need to check the special
+permissions menu, if using Android OS version 11+. After
+granting the permission please restart the application.[0m
 
 [0;36m----------------------------------------------------------------[0m
 
