@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec less /usr/local/share/doc/vmconsole/guides/Bash_Guide_For_Beginners.txt

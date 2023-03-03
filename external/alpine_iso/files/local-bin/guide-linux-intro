@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec less /usr/local/share/doc/vmconsole/guides/Introduction_To_Linux.txt

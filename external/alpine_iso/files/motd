@@ -123,11 +123,32 @@ boot logs shown on console.[0m
 [1;96m= GETTING HELP FOR ALPINE LINUX =[0m
 
 [0;36mBundled offline tutorials about Bash and Linux system usage can
-be found at [0;32m~/guides[0;36m. They are plain-text editions of certain
-books from TLDP.[0m
+be found in directory [0;32m/usr/local/share/doc/vmconsole[0;36m. They are
+plain-text editions of certain books from TLDP.[0m
 
-[1;36mAlpine Linux uses [0;32mapk [0;36mas package manager. Here are some most
-used commands:[0m
+[0;36mYou can execute these commands to open a specific guide:[0m
+
+ [0;36m- [0;32mguide-linux-intro[0m
+
+   [0;36mIntroduction to Linux by Machtelt Garrels.[0m
+
+ [0;36m- [0;32mguide-linux-admin[0m
+
+   [0;36mLinux System Administrator's Guide by Lars Wirzenius.[0m
+
+ [0;36m- [0;32mguide-bash-for-beginners[0m
+
+   [0;36mBash Guide for Beginners by Machtelt Garrels.[0m
+
+ [0;36m- [0;32mguide-advances-bash-scripting[0m
+
+   [0;36mAdvanced Bash Scripting Guide by Mendel Cooper.[0m
+
+[0;36mOnce finished read the guide using one of commands above,
+type 'q' to exit.[0m
+
+[0;36mAlpine Linux uses [0;32mapk [0;36mas package manager. Below is the list
+of essential commands:[0m
 
  [0;36m- Search package:  [0;32mapk search <query>[0m
  [0;36m- Install package: [0;32mapk add <pkg-name>[0m
