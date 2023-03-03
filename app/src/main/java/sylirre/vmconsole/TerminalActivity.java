@@ -545,7 +545,7 @@ public final class TerminalActivity extends Activity implements ServiceConnectio
                 processArgs.addAll(Arrays.asList("-fsdev",
                     "local,security_model=none,id=fsdev0,multidevs=remap,path=" + sharedStoragePath));
                 processArgs.addAll(Arrays.asList("-device",
-                    "virtio-9p-pci,fsdev=fsdev0,mount_tag=host_storage,id=virtio-9p-pci0"));
+                    "virtio-9p-pci,fsdev=fsdev0,mount_tag=shared_storage,id=virtio-9p-pci0"));
             }
         }
 
