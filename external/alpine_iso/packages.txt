@@ -964,7 +964,6 @@ perl-extutils-installpaths-doc
 perl-file-listing
 perl-file-listing-doc
 perl-git
-perl-git-svn
 perl-html-parser
 perl-html-parser-doc
 perl-html-tagset
