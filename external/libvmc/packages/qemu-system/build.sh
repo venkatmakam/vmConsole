@@ -8,6 +8,27 @@ builder_step_configure() {
 	CFLAGS+=" $CPPFLAGS"
 	CXXFLAGS+=" $CPPFLAGS"
 
+	if [ "$PACKAGE_TARGET_ARCH" = "aarch64" ]; then
+		rm -rf "${PACKAGE_BUILDDIR}"/_lib
+		mkdir -p "${PACKAGE_BUILDDIR}"/_lib
+
+		cd "$PACKAGE_BUILDDIR"
+		mkdir -p _setjmp-aarch64
+		pushd _setjmp-aarch64
+		mkdir -p private
+
+		local s
+		for s in "${PACKAGE_BUILDER_DIR}"/setjmp-aarch64/{setjmp.S,private-*.h}; do
+			local f=$(basename "${s}")
+			cp "${s}" ./"${f/-//}"
+		done
+		$CC $CFLAGS $CPPFLAGS -I. setjmp.S -c
+		$AR cru "${PACKAGE_BUILDDIR}"/_lib/libandroid-setjmp.a setjmp.o
+		popd
+
+		LDFLAGS+=" -L${PACKAGE_BUILDDIR}/_lib -l:libandroid-setjmp.a"
+	fi
+
 	if [ "$PACKAGE_TARGET_ARCH" = "i686" ]; then
 		LDFLAGS+=" -latomic"
 	fi
