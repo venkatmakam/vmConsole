@@ -1287,6 +1287,7 @@ tree-sitter-git-commit
 tree-sitter-git-diff
 tree-sitter-git-rebase
 tree-sitter-go
+tree-sitter-go-mod
 tree-sitter-grammars
 tree-sitter-html
 tree-sitter-java
