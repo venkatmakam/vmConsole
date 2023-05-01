@@ -13,15 +13,13 @@ be compatible with majority of devices running Android 7.0 and higher. Your
 device is not required to be rooted or have custom firmware installed. KVM
 acceleration is not supported meaning that performance will be low.
 
-**As of now application may not work on ARM v9 devices.**
-
 vmConsole is exactly console, aka "terminal" application. Input and output are
 being performed through Xterm-compatible terminal screen. Don't beg for Xorg
 or Wayland support.
 
 <p align="center">
   <a href="https://github.com/sylirre/vmConsole/releases/latest">
-    <img src="docs/files/get-it-on-github.png" width="256px">
+    <img src="images/get-it-on-github.png" width="256px">
   </a>
 </p>
 
@@ -44,9 +42,9 @@ some basics.
 It is highly recommended to visit [Alpine Linux Wiki].
 
 <p align="center">
-  <img src="docs/files/demo_btop.png" width="256px">
-  <img src="docs/files/demo_docker.png" width="256px">
-  <img src="docs/files/demo_metasploit.png" width="256px">
+  <img src="images/demo_btop.png" width="256px">
+  <img src="images/demo_docker.png" width="256px">
+  <img src="images/demo_metasploit.png" width="256px">
 </p>
 
 ## About project
