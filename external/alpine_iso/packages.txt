@@ -920,7 +920,6 @@ p11-kit-doc
 p11-kit-server
 p11-kit-trust
 p7zip
-p7zip-doc
 pango
 pango-dev
 pango-doc
